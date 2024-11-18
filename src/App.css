@@ -5,17 +5,45 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.main-container {
+  height: 550px;
+  width: 550px;
+  background-color: #f5f7fb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.yellow-blob {
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+
+.blue-blob {
+  position: absolute;
+  bottom: 0px;
+  overflow: hidden;
+}
+
+.start {
+  font-family: "Karla", Arial, Helvetica, sans-serif;
+}
+
+.start-button {
+  color: #f5f7fb;
+  background-color: #4d5b9e;
+  height: 50px;
+  width: 190px;
+  font-family: Inter, sans-serif;
+  font-size: 1.15rem;
+  border-radius: 15px;
+}
+
+.title {
+  font-weight: 500;
 }
 
 @keyframes logo-spin {

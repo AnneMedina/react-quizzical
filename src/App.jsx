@@ -1,35 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import "./App.css";
+import Startpage from "./components/Start";
+import Questions from "./components/Questions";
+import Answers from "./components/Answers";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [page, setPage] = React.useState(1);
+
+  const styles = { left: "-70px", bottom: "-50px" };
+  function startGame() {
+    console.log("start game");
+    setPage(2);
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <main className="main-container">
+      {page === 1 && <Startpage startGame={startGame} />}
+      {page === 2 && <Questions styles={styles} />}
+      {page === 3 && <Answers startGame={startGame} styles={styles} />}
+    </main>
+  );
 }
-
-export default App
