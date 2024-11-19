@@ -5,9 +5,10 @@ import Questions from "./components/Questions";
 import Answers from "./components/Answers";
 
 export default function App() {
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(2);
 
   const styles = { left: "-70px", bottom: "-50px" };
+
   function startGame() {
     console.log("start game");
     setPage(2);

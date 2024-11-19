@@ -14,18 +14,21 @@
   align-items: center;
   position: relative;
   overflow: hidden;
+  z-index: -1;
 }
 
 .yellow-blob {
   position: absolute;
   top: 0px;
   right: 0px;
+  z-index: -1;
 }
 
 .blue-blob {
   position: absolute;
   bottom: 0px;
   overflow: hidden;
+  z-index: -1;
 }
 
 .start {
@@ -44,6 +47,37 @@
 
 .title {
   font-weight: 500;
+}
+
+.questions {
+  z-index: 2;
+}
+
+hr {
+  border: 1px solid #dbdef0;
+  margin-top: 25px;
+}
+label {
+  height: 20px;
+  padding: 5px 10px;
+  font-family: Inter, sans-serif;
+  font-size: 0.85rem;
+  color: #293264;
+  border: 0.1rem solid #4d5b9e;
+  margin: 10px 5px;
+  border-radius: 10px;
+}
+
+label:hover {
+  background-color: #d6dbf5;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+.answer {
+  background-color: #d6dbf5;
 }
 
 @keyframes logo-spin {
