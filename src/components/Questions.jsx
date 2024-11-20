@@ -5,6 +5,8 @@ import { decode } from "html-entities";
 export default function Questions() {
   const [questions, setQuestions] = React.useState([]);
 
+  // console.log("new %o, ", questions);
+
   function fetchQuestions() {
     fetch("https://opentdb.com/api.php?amount=5")
       .then((res) => {
@@ -14,7 +16,29 @@ export default function Questions() {
         }
         return res.json();
       })
-      .then((data) => setQuestions(data.results || []))
+      .then((data) => {
+        if (data.results.length > 0) {
+          // setQuestions(data.results);
+
+          const shuffledAnswers = data.results.map((q) => ({
+            ...q,
+            id: nanoid(),
+            question: decode(q.question),
+            correct_answer: decode(q.correct_answer),
+            incorrect_answers: q.incorrect_answers.map((i) => decode(i)),
+            shuffled_answers: randomizeAnswers(q),
+            selected_answer: "",
+          }));
+
+          setQuestions(shuffledAnswers);
+        } else {
+          setTimeout(() => {
+            console.log("Retrying now..."); // Log right before the retry
+            fetchQuestions();
+          }, 5000);
+          // setQuestions([]);
+        }
+      })
       .catch((error) => {
         console.error("Error fetching data: ", error);
         console.log("Retrying in 5 seconds..."); // Log when retry is triggered
@@ -28,66 +52,75 @@ export default function Questions() {
   React.useEffect(fetchQuestions, []);
 
   function randomizeAnswers(q) {
-    const randomAnswers = [...q.incorrect_answers, q.correct_answer];
-
-    console.log("possible answers %o, ", randomAnswers);
-
-    for (let i = randomAnswers.length - 1; i > 0; i--) {
-      const randomIndex = Math.floor(Math.random() * (i + 1)); //get a random index
-      // console.log("random index " + randomIndex);
-      [randomAnswers[i], randomAnswers[randomIndex]] = [
-        randomAnswers[randomIndex],
-        randomAnswers[i],
-      ];
-    }
-
-    return randomAnswers;
+    // return item.map((q) => {
+    const possibleAnswers = [...q.incorrect_answers]; // Copy incorrect answers
+    const randomIndex = Math.floor(
+      Math.random() * (possibleAnswers.length + 1)
+    ); // Get random index
+    possibleAnswers.splice(randomIndex, 0, q.correct_answer); // Insert correct answer randomly
+    // return { ...q, shuffled_answers: possibleAnswers }; //
+    // console.log("possible answers %o", possibleAnswers);
+    return possibleAnswers;
+    // });
   }
 
-  if (questions.length > 0) {
-    // console.log(questions[0]);
-    // const shuffledAnswers = questions.map((q) => {
-    //   return { ...q, shuffledAnswers: randomizeAnswers(q) };
-    // });
+  React.useEffect(() => {
+    console.log(questions);
+  }, [questions]);
 
-    let shuffledAnswerObj;
-    // for (let c = 0; c <= questions.length; c++) {
-    shuffledAnswerObj = randomizeAnswers(questions[0]);
-    // console.log(shuffledAnswerObj);
-    // }
-    console.log("shuffled answers %o", shuffledAnswerObj);
+  function markAnswer(e) {
+    e.preventDefault();
+    const label = e.target;
+    const selectedAnswer = label.innerText;
+    console.log(selectedAnswer);
+
+    const radioButton = label.querySelector("input[type='radio']");
+    radioButton.checked = true;
+
+    console.log(radioButton.name);
+
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q) => {
+        return q.id === radioButton.name
+          ? {
+              ...q,
+              selected_answer: selectedAnswer,
+            }
+          : { ...q };
+      })
+    );
   }
 
   return (
     <section className="quiz">
-      {/* {questions.length === 0 ? ( // Check if questions are available
-        <p>Loading questions...</p>
-      ) : (
-        questions.map((q) => (
-          <div key={nanoid()} className="quiz-item">
-            <h4 className="quiz-question">{decode(q.question)}</h4>
-            <div className="quiz-answers">
-              {q.incorrect_answers.map((incorrect, index) => (
-                <label key={index}>
-                  {incorrect}
-                  <input
-                    type="radio"
-                    name="answer"
-                    value={q.incorrect_answers[0]}
-                  />
-                </label>
-              ))}
+      <form>
+        {questions.length === 0 ? ( // Check if questions are available
+          <p>Loading questions...</p>
+        ) : (
+          questions.map((q) => (
+            <div key={nanoid()} className="quiz-item">
+              <h4 className="quiz-question">{q.question}</h4>
+              <div className="quiz-answers">
+                {q.shuffled_answers.map((a, index) => (
+                  <label
+                    onClick={(e) => markAnswer(e)}
+                    key={`${q.id}_${index}`}
+                    style={{
+                      backgroundColor:
+                        a === q.selected_answer ? "#b76e795e" : "",
+                    }}
+                  >
+                    {a}
+                    <input type="radio" name={q.id} value={a} />
+                  </label>
+                ))}
+              </div>
 
-              <label style={{ backgroundColor: "#b76e795e" }}>
-                {q.correct_answer}
-                <input type="radio" name="answer" value={q.correct_answer} />
-              </label>
+              <hr />
             </div>
-
-            <hr />
-          </div>
-        ))
-      )} */}
+          ))
+        )}
+      </form>
     </section>
   );
 }
