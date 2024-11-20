@@ -30,20 +30,32 @@ export default function Questions() {
   function randomizeAnswers(q) {
     const randomAnswers = [...q.incorrect_answers, q.correct_answer];
 
+    console.log("possible answers %o, ", randomAnswers);
+
     for (let i = randomAnswers.length - 1; i > 0; i--) {
       const randomIndex = Math.floor(Math.random() * (i + 1)); //get a random index
-      console.log("random index " + randomIndex)[
-        (randomAnswers[i], randomAnswers[randomIndex])
-      ] = [randomAnswers[randomIndex], randomAnswers[i]];
+      // console.log("random index " + randomIndex);
+      [randomAnswers[i], randomAnswers[randomIndex]] = [
+        randomAnswers[randomIndex],
+        randomAnswers[i],
+      ];
     }
 
     return randomAnswers;
   }
 
   if (questions.length > 0) {
-    console.log(questions);
-    const shuffledAnswers = questions.map((q) => {});
-    console.log(shuffledAnswers);
+    // console.log(questions[0]);
+    // const shuffledAnswers = questions.map((q) => {
+    //   return { ...q, shuffledAnswers: randomizeAnswers(q) };
+    // });
+
+    let shuffledAnswerObj;
+    // for (let c = 0; c <= questions.length; c++) {
+    shuffledAnswerObj = randomizeAnswers(questions[0]);
+    // console.log(shuffledAnswerObj);
+    // }
+    console.log("shuffled answers %o", shuffledAnswerObj);
   }
 
   return (
