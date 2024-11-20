@@ -1,13 +1,13 @@
-import yellowBlob from "../assets/yellowblob.png";
-import blueBlob from "../assets/blueblob.png";
+// import React from "react";
 
 export default function Answers(props) {
+  const score = 0;
+  const total = 5;
+
   return (
-    <section className="questions">
-      <img className="yellow-blob" src={yellowBlob} />
-      How would one say goodbye in Spanish?
-      <img className="blue-blob" src={blueBlob} style={props.styles} />
-      <button onClick={props.startGame}></button>
+    <section className="quiz">
+      {props.questions}
+      <p className=""> You scored {`${score}/${total}`} correct answers </p>
     </section>
   );
 }

@@ -4,7 +4,6 @@ import Blueblob from "./assets/blueblob.png";
 import Yellowblob from "./assets/yellowBlob.png";
 import Startpage from "./components/Start";
 import Questions from "./components/Questions";
-import Answers from "./components/Answers";
 
 export default function App() {
   const [page, setPage] = React.useState(1);
@@ -14,22 +13,12 @@ export default function App() {
     setPage(2);
   }
 
-  function checkAnswers() {}
-
   return (
     <main className="main-container">
       <img className="yellow-blob" src={Yellowblob}></img>
       {page === 1 && <Startpage startGame={startGame} />}
       {page === 2 && <Questions />}
-      {page === 3 && <Answers startGame={startGame} />}
 
-      <button
-        onClick={page == 2 ? checkAnswers : startGame}
-        className={page > 1 ? "action-button" : "start-button"}
-        style={{ zIndex: "10" }}
-      >
-        {page == 1 ? "Start Quiz" : page === 2 ? "Check Answers" : "Play Again"}
-      </button>
       <img
         className="blue-blob"
         src={Blueblob}

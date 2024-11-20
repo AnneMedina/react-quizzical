@@ -24,7 +24,7 @@ section {
 }
 
 .quiz {
-  height: 600px;
+  min-height: 580px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -51,6 +51,13 @@ section {
   margin: 12px;
 }
 
+.score-message {
+  display: inline-block;
+  margin-right: 20px;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
 .start-button {
   color: #f5f7fb;
   background-color: #b76e79;
@@ -71,7 +78,7 @@ section {
   font-family: Inter, sans-serif;
   font-size: 1.15rem;
   border-radius: 15px;
-  margin: 10px 5px 0px 5px;
+  margin: 10px auto 0px auto;
 }
 
 .title {

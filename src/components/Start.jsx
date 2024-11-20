@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function Startpage(props) {
   return (
     <section>
@@ -5,6 +7,13 @@ export default function Startpage(props) {
       <p className="start-description">
         Select the correct answers to the questions
       </p>
+      <button
+        onClick={props.startGame}
+        className="start-button"
+        style={{ zIndex: "10" }}
+      >
+        Start Game
+      </button>
     </section>
   );
 }

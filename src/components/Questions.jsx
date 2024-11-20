@@ -4,8 +4,9 @@ import { decode } from "html-entities";
 
 export default function Questions() {
   const [questions, setQuestions] = React.useState([]);
+  const [checkPage, setCheckPage] = React.useState(false);
 
-  // console.log("new %o, ", questions);
+  console.log("new %o, ", questions);
 
   function fetchQuestions() {
     fetch("https://opentdb.com/api.php?amount=5")
@@ -23,7 +24,7 @@ export default function Questions() {
           const shuffledAnswers = data.results.map((q) => ({
             ...q,
             id: nanoid(),
-            question: decode(q.question),
+            // question: decode(q.question),
             correct_answer: decode(q.correct_answer),
             incorrect_answers: q.incorrect_answers.map((i) => decode(i)),
             shuffled_answers: randomizeAnswers(q),
@@ -49,24 +50,24 @@ export default function Questions() {
       });
   }
 
-  React.useEffect(fetchQuestions, []);
+  React.useEffect(() => {
+    if (questions.length == 0) {
+      fetchQuestions();
+    }
+  }, []);
 
   function randomizeAnswers(q) {
-    // return item.map((q) => {
-    const possibleAnswers = [...q.incorrect_answers]; // Copy incorrect answers
+    const possibleAnswers = q.incorrect_answers.map((i) => decode(i)); // Copy incorrect answers
     const randomIndex = Math.floor(
       Math.random() * (possibleAnswers.length + 1)
     ); // Get random index
-    possibleAnswers.splice(randomIndex, 0, q.correct_answer); // Insert correct answer randomly
-    // return { ...q, shuffled_answers: possibleAnswers }; //
-    // console.log("possible answers %o", possibleAnswers);
+    possibleAnswers.splice(randomIndex, 0, decode(q.correct_answer)); // Insert correct answer randomly
     return possibleAnswers;
-    // });
   }
 
-  React.useEffect(() => {
-    console.log(questions);
-  }, [questions]);
+  // React.useEffect(() => {
+  //   console.log(questions);
+  // }, [questions]);
 
   function markAnswer(e) {
     e.preventDefault();
@@ -91,36 +92,100 @@ export default function Questions() {
     );
   }
 
-  return (
-    <section className="quiz">
-      <form>
-        {questions.length === 0 ? ( // Check if questions are available
-          <p>Loading questions...</p>
-        ) : (
-          questions.map((q) => (
-            <div key={nanoid()} className="quiz-item">
-              <h4 className="quiz-question">{q.question}</h4>
-              <div className="quiz-answers">
-                {q.shuffled_answers.map((a, index) => (
-                  <label
-                    onClick={(e) => markAnswer(e)}
-                    key={`${q.id}_${index}`}
-                    style={{
-                      backgroundColor:
-                        a === q.selected_answer ? "#b76e795e" : "",
-                    }}
-                  >
-                    {a}
-                    <input type="radio" name={q.id} value={a} />
-                  </label>
-                ))}
-              </div>
+  function checkAnswers() {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q) => {
+        return { ...q, score: q.selected_answer === q.correct_answer ? 1 : 0 };
+      })
+    );
 
-              <hr />
-            </div>
-          ))
-        )}
-      </form>
+    setCheckPage(true);
+    console.log(questions);
+  }
+
+  function playAgain() {
+    setCheckPage(false);
+    setQuestions([]);
+    fetchQuestions();
+  }
+
+  return (
+    <section>
+      {/* <form> */}
+      {questions.length === 0 ? ( // Check if questions are available
+        <p>Loading questions...</p>
+      ) : (
+        <>
+          <div className="quiz">
+            {questions.map((q) => (
+              <div key={nanoid()} className="quiz-item">
+                <h4 className="quiz-question">{decode(q.question)}</h4>
+                <div className="quiz-answers">
+                  {q.shuffled_answers.map((a, index) => (
+                    <label
+                      onClick={(e) => markAnswer(e)}
+                      key={`${q.id}_${index}`}
+                      style={
+                        checkPage
+                          ? {
+                              backgroundColor:
+                                a === q.correct_answer
+                                  ? "#94D7A2"
+                                  : a === q.selected_answer
+                                  ? "#b76e795e"
+                                  : "none",
+                              border:
+                                a === q.correct_answer
+                                  ? "#94D7A2"
+                                  : "0.1rem solid #b76e79",
+                              isHovered: "none",
+                            }
+                          : a === q.selected_answer
+                          ? {
+                              backgroundColor: "#b76e795e",
+                            }
+                          : {
+                              backgroundColor: "none",
+                            }
+                      }
+                    >
+                      {decode(a)}
+                      <input type="radio" name={q.id} value={a} />
+                    </label>
+                  ))}
+                </div>
+
+                <hr />
+              </div>
+            ))}
+          </div>
+          {checkPage ? (
+            <>
+              <p className="score-message">
+                {/* You scored {`${score}/${total}`} correct answers{" "} */}
+                You scored correct answers{" "}
+              </p>
+              <button
+                onClick={playAgain}
+                className="action-button"
+                style={{ zIndex: "10" }}
+              >
+                Play Again
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={checkAnswers}
+              className="action-button"
+              style={{ zIndex: "10" }}
+            >
+              Check Answers
+            </button>
+          )}
+        </>
+      )}
+
+      {/* </form> */}
     </section>
   );
 }
