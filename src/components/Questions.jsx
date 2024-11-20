@@ -138,7 +138,6 @@ export default function Questions() {
                                 a === q.correct_answer
                                   ? "#94D7A2"
                                   : "0.1rem solid #b76e79",
-                              isHovered: "none",
                             }
                           : a === q.selected_answer
                           ? {
