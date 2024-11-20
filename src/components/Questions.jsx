@@ -5,8 +5,6 @@ import { decode } from "html-entities";
 export default function Questions() {
   const [questions, setQuestions] = React.useState([]);
 
-  console.log(questions);
-
   function fetchQuestions() {
     fetch("https://opentdb.com/api.php?amount=5")
       .then((res) => {
@@ -29,9 +27,28 @@ export default function Questions() {
 
   React.useEffect(fetchQuestions, []);
 
+  function randomizeAnswers(q) {
+    const randomAnswers = [...q.incorrect_answers, q.correct_answer];
+
+    for (let i = randomAnswers.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1)); //get a random index
+      console.log("random index " + randomIndex)[
+        (randomAnswers[i], randomAnswers[randomIndex])
+      ] = [randomAnswers[randomIndex], randomAnswers[i]];
+    }
+
+    return randomAnswers;
+  }
+
+  if (questions.length > 0) {
+    console.log(questions);
+    const shuffledAnswers = questions.map((q) => {});
+    console.log(shuffledAnswers);
+  }
+
   return (
     <section className="quiz">
-      {questions.length === 0 ? ( // Check if questions are available
+      {/* {questions.length === 0 ? ( // Check if questions are available
         <p>Loading questions...</p>
       ) : (
         questions.map((q) => (
@@ -48,6 +65,7 @@ export default function Questions() {
                   />
                 </label>
               ))}
+
               <label style={{ backgroundColor: "#b76e795e" }}>
                 {q.correct_answer}
                 <input type="radio" name="answer" value={q.correct_answer} />
@@ -57,7 +75,7 @@ export default function Questions() {
             <hr />
           </div>
         ))
-      )}
+      )} */}
     </section>
   );
 }
