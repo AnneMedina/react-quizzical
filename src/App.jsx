@@ -7,9 +7,7 @@ import Questions from "./components/Questions";
 import Answers from "./components/Answers";
 
 export default function App() {
-  const [page, setPage] = React.useState(2);
-
-  // const styles = { left: "-70px", bottom: "-50px" };
+  const [page, setPage] = React.useState(1);
 
   function startGame() {
     console.log("start game");
@@ -28,6 +26,7 @@ export default function App() {
       <button
         onClick={page == 2 ? checkAnswers : startGame}
         className={page > 1 ? "action-button" : "start-button"}
+        style={{ zIndex: "10" }}
       >
         {page == 1 ? "Start Quiz" : page === 2 ? "Check Answers" : "Play Again"}
       </button>
