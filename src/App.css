@@ -53,7 +53,7 @@ section {
 
 .start-button {
   color: #f5f7fb;
-  background-color: #4d5b9e;
+  background-color: #b76e79;
   height: 50px;
   width: 190px;
   font-family: Inter, sans-serif;
@@ -65,7 +65,7 @@ section {
 
 .action-button {
   color: #f5f7fb;
-  background-color: #4d5b9e;
+  background-color: #b76e79;
   height: 50px;
   width: 190px;
   font-family: Inter, sans-serif;
@@ -79,7 +79,7 @@ section {
 }
 
 .quiz-question {
-  margin: 10px;
+  margin: 0px 5px 5px 5px;
   text-align: left;
 }
 
@@ -95,8 +95,8 @@ section {
 }
 
 hr {
-  border: 1px solid #dbdef0;
-  margin-top: 5px;
+  border: 1px solid #b76e795e;
+  margin: 5px 0px;
   width: 95%;
 }
 
@@ -107,8 +107,8 @@ label {
   padding: 2px 8px;
   font-family: Inter, sans-serif;
   font-size: 0.85rem;
-  color: #293264;
-  border: 0.1rem solid #4d5b9e;
+  color: #85555d;
+  border: 0.1rem solid #b76e79;
   margin: 5px;
   border-radius: 10px;
   display: inline-block;
@@ -116,7 +116,7 @@ label {
 }
 
 label:hover {
-  background-color: #d6dbf5;
+  background-color: #b76e795e;
 }
 
 input[type="radio"] {
@@ -124,7 +124,7 @@ input[type="radio"] {
 }
 
 .answer {
-  background-color: #d6dbf5;
+  background-color: #b76e795e;
 }
 
 @keyframes logo-spin {
