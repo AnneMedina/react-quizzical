@@ -78,7 +78,7 @@ section {
   font-family: Inter, sans-serif;
   font-size: 1.15rem;
   border-radius: 15px;
-  margin: 10px auto 0px auto;
+  margin: 5px auto 0px auto;
 }
 
 .title {
@@ -113,8 +113,9 @@ label {
   min-width: 30px;
   padding: 2px 8px;
   font-family: Inter, sans-serif;
-  font-size: 0.85rem;
-  color: #85555d;
+  font-size: 0.9rem;
+  /* color: #85555d; */
+  color: black;
   border: 0.1rem solid #b76e79;
   margin: 5px;
   border-radius: 10px;

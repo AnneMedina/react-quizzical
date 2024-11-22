@@ -1,10 +1,15 @@
 import React from "react";
 import { nanoid } from "nanoid";
 import { decode } from "html-entities";
+import Blueblob from "../assets/blueblob.png";
+import Yellowblob from "../assets/yellowblob.png";
 
 export default function Questions() {
   const [questions, setQuestions] = React.useState([]);
   const [checkPage, setCheckPage] = React.useState(false);
+  const [score, setScore] = React.useState(0);
+
+  console.log("state score" + score);
 
   console.log("new %o, ", questions);
 
@@ -93,14 +98,20 @@ export default function Questions() {
   }
 
   function checkAnswers() {
+    let scoreCount = score;
+
     setQuestions((prevQuestions) =>
       prevQuestions.map((q) => {
-        return { ...q, score: q.selected_answer === q.correct_answer ? 1 : 0 };
+        const gotItRight = q.selected_answer === q.correct_answer;
+        if (gotItRight) scoreCount++;
+        console.log(scoreCount);
+        return { ...q, score: gotItRight ? 1 : 0, scoreCount: scoreCount };
       })
     );
 
+    setScore(scoreCount); // Update the score state
+
     setCheckPage(true);
-    console.log(questions);
   }
 
   function playAgain() {
@@ -111,6 +122,7 @@ export default function Questions() {
 
   return (
     <section>
+      <img className="yellow-blob" src={Yellowblob}></img>
       {/* <form> */}
       {questions.length === 0 ? ( // Check if questions are available
         <p>Loading questions...</p>
@@ -136,8 +148,10 @@ export default function Questions() {
                                   : "none",
                               border:
                                 a === q.correct_answer
-                                  ? "#94D7A2"
-                                  : "0.1rem solid #b76e79",
+                                  ? "0.1rem solid #94D7A2"
+                                  : a === q.selected_answer
+                                  ? "0.1rem solid rgba(183, 110, 121, 0.37)"
+                                  : "0.1rem solid #b76e79e",
                             }
                           : a === q.selected_answer
                           ? {
@@ -185,6 +199,14 @@ export default function Questions() {
       )}
 
       {/* </form> */}
+      <img
+        className="blue-blob"
+        src={Blueblob}
+        style={{
+          left: "-70px",
+          bottom: "-50px",
+        }}
+      />
     </section>
   );
 }
