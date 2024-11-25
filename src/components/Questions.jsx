@@ -8,10 +8,7 @@ export default function Questions() {
   const [questions, setQuestions] = React.useState([]);
   const [checkPage, setCheckPage] = React.useState(false);
   const [score, setScore] = React.useState(0);
-
-  console.log("state score" + score);
-
-  console.log("new %o, ", questions);
+  const total = 5; //set of 5 questions for now. This can be dynamically configured
 
   function fetchQuestions() {
     fetch("https://opentdb.com/api.php?amount=5")
@@ -24,16 +21,15 @@ export default function Questions() {
       })
       .then((data) => {
         if (data.results.length > 0) {
-          // setQuestions(data.results);
-
+          /** I processed the data as soon as I got it and added some properties for easier manipulation later */
           const shuffledAnswers = data.results.map((q) => ({
             ...q,
             id: nanoid(),
-            // question: decode(q.question),
             correct_answer: decode(q.correct_answer),
             incorrect_answers: q.incorrect_answers.map((i) => decode(i)),
             shuffled_answers: randomizeAnswers(q),
             selected_answer: "",
+            score: 0,
           }));
 
           setQuestions(shuffledAnswers);
@@ -42,7 +38,6 @@ export default function Questions() {
             console.log("Retrying now..."); // Log right before the retry
             fetchQuestions();
           }, 5000);
-          // setQuestions([]);
         }
       })
       .catch((error) => {
@@ -70,20 +65,15 @@ export default function Questions() {
     return possibleAnswers;
   }
 
-  // React.useEffect(() => {
-  //   console.log(questions);
-  // }, [questions]);
-
   function markAnswer(e) {
-    e.preventDefault();
+    /** If answers have been checked, disable clicking on other answers  */
+    checkPage ? e.stopImmediagePropagation() : e.preventDefault();
+
     const label = e.target;
     const selectedAnswer = label.innerText;
-    console.log(selectedAnswer);
 
     const radioButton = label.querySelector("input[type='radio']");
     radioButton.checked = true;
-
-    console.log(radioButton.name);
 
     setQuestions((prevQuestions) =>
       prevQuestions.map((q) => {
@@ -91,6 +81,7 @@ export default function Questions() {
           ? {
               ...q,
               selected_answer: selectedAnswer,
+              score: selectedAnswer === q.correct_answer ? 1 : 0,
             }
           : { ...q };
       })
@@ -98,20 +89,14 @@ export default function Questions() {
   }
 
   function checkAnswers() {
-    let scoreCount = score;
-
-    setQuestions((prevQuestions) =>
-      prevQuestions.map((q) => {
-        const gotItRight = q.selected_answer === q.correct_answer;
-        if (gotItRight) scoreCount++;
-        console.log(scoreCount);
-        return { ...q, score: gotItRight ? 1 : 0, scoreCount: scoreCount };
-      })
+    setCheckPage(true);
+    const initialScore = 0;
+    const totalScore = questions.reduce(
+      (accumulator, q) => accumulator + q.score,
+      initialScore
     );
 
-    setScore(scoreCount); // Update the score state
-
-    setCheckPage(true);
+    setScore(totalScore);
   }
 
   function playAgain() {
@@ -175,8 +160,7 @@ export default function Questions() {
           {checkPage ? (
             <>
               <p className="score-message">
-                {/* You scored {`${score}/${total}`} correct answers{" "} */}
-                You scored correct answers{" "}
+                You scored {`${score}/${total}`} correct answers{" "}
               </p>
               <button
                 onClick={playAgain}
